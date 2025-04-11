@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCQ Test App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body,
+    html {
+      height: 100%;
+      width: 100%;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f7fc;
+      color: #333;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      gap: 10px;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #ddd;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .tab-btn.active {
+      background-color: #3b5998;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.2em;
+      color: #3b5998;
+      margin-bottom: 20px;
+    }
+
+    .username input {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .btn {
+      background-color: #3b5998;
+      color: #fff;
+      padding: 12px 20px;
+      font-size: 1.2em;
+      border-radius: 5px;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #2d4373;
+    }
+
+    .btn.finish {
+      background-color: #e74c3c;
+    }
+
+    .btn.finish:hover {
+      background-color: #c0392b;
+    }
+
+    .timer {
+      font-size: 1.2em;
+      color: #e74c3c;
+      margin-bottom: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .questions {
+      display: none;
+    }
+
+    .question {
+      margin-bottom: 30px;
+    }
+
+    .question label {
+      font-size: 1.1em;
+      margin-bottom: 12px;
+      display: block;
+      font-weight: 500;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .certificate {
+      display: none;
+      text-align: center;
+      background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+      padding: 50px 30px;
+      border-radius: 20px;
+      border: 8px double #28a745;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      max-width: 700px;
+      animation: fadeIn 1.5s ease-out;
+      position: relative;
+      font-family: 'Georgia', serif;
+      margin: auto;
+    }
+
+    .certificate::before {
+      content: '🎖️';
+      font-size: 3rem;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+
+    .certificate h2 {
+      font-size: 3em;
+      color: #2e7d32;
+      margin-bottom: 20px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .certificate p {
+      font-size: 1.4em;
+      color: #444;
+      margin: 20px 0;
+    }
+
+    .certificate #certificateName span {
+      font-size: 1.8em;
+      font-weight: 600;
+      color: #1b5e20;
+    }
+
+    .certificate .score {
+      font-size: 2em;
+      font-weight: bold;
+      color: #007bff;
+      margin-top: 10px;
+    }
+
+    .details {
+      display: none;
+      text-align: left;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .details .correct {
+      color: green;
+    }
+
+    .details .wrong {
+      color: red;
+    }
+
+    .see-details-btn {
+      margin-top: 20px;
+      background-color: #007bff;
+    }
+
+    .admin-container {
+      display: none;
+      text-align: center;
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .admin-container table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    .admin-container th,
+    .admin-container td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    #adminPassword {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .admin-container .btn {
+      width: auto;
+      background-color: #007bff;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      .tabs {
+        flex-direction: column;
+      }
+
+      .tab-btn {
+        font-size: 0.9em;
+      }
+
+      .btn {
+        font-size: 1em;
+      }
+
+      .question label {
+        font-size: 1em;
+      }
+
+      .timer {
+        font-size: 1em;
+      }
+
+      .certificate h2 {
+        font-size: 2.2em;
+      }
+
+      .certificate p {
+        font-size: 1.2em;
+      }
+
+      .certificate .score {
+        font-size: 1.6em;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .tabs {
+        flex-direction: column;
+      }
+
+      .btn {
+        font-size: 0.9em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('user')">User</button>
+    <button class="tab-btn" onclick="showTab('admin')">Admin</button>
+  </div>
+
+  <div id="userTab">
+    <div class="container">
+      <div class="username">
+        <h1>Welcome To The MCQ Test</h1>
+        <p>To Begin, Please Enter Your Name:</p>
+        <input type="text" id="username" placeholder="Your Name" />
+        <button class="btn" onclick="startTest()">Start</button>
+      </div>
+
+      <div class="questions">
+        <div class="timer" id="timer">Time Remaining: 01:00</div>
+        <div id="questionContainer"></div>
+        <div class="navigation">
+          <button class="btn" onclick="prevQuestion()">Back</button>
+          <button class="btn" onclick="nextQuestion()">Next</button>
+          <button class="btn finish" onclick="submitTest()" style="display:none;" id="finishBtn">Finish</button>
+        </div>
+      </div>
+
+      <div class="certificate">
+        <h2>Certificate of Completion</h2>
+        <p>This is to certify that</p>
+        <p id="certificateName"><span></span></p>
+        <p>has successfully completed the test</p>
+        <p>Your Score:</p>
+        <p class="score" id="certificatePercentage"></p>
+        <button class="btn see-details-btn" onclick="showDetails()">See Details</button>
+      </div>
+
+      <div class="details" id="detailsContainer"></div>
+    </div>
+  </div>
+
+  <div id="adminTab" style="display: none;">
+    <div class="container">
+      <h1>Admin Panel</h1>
+      <p>Please Enter Password:</p>
+      <input type="password" id="adminPassword" placeholder="Admin Password" />
+      <button class="btn" onclick="authenticateAdmin()">Submit</button>
+    </div>
+
+    <div class="admin-container" id="adminContainer">
+  <h2>Student Results</h2>
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>Score</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="adminResults"></tbody>
+    </table>
+  </div>
+</div>
+
+  <script>
+    const questionsData = [
+      { question: "1. What is Scratch?", options: ["A) A programming language", "B) A game engine", "C) A movie editing tool", "D) A graphics software"], correct: "A) A programming language" },
+      { question: "2. Who created Scratch?", options: ["A) Mark Zuckerberg", "B) MIT Media Lab", "C) Steve Jobs", "D) Bill Gates"], correct: "B) MIT Media Lab" },
+      { question: "3. What are 'sprites' in Scratch?", options: ["A) Backgrounds", "B) Blocks of code", "C) Characters or objects in the project", "D) Sounds in the project"], correct: "C) Characters or objects in the project" }
+    ];
+
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let username = "";
+    let timerInterval;
+    let studentResults = JSON.parse(localStorage.getItem('studentResults')) || [];
+    const adminPassword = "a"; // Change this password to whatever you prefer
+
+    function startTest() {
+      username = document.getElementById("username").value.trim();
+      if (!username) {
+        alert("Please enter your name.");
+        return;
+      }
+
+      document.querySelector(".username").style.display = "none";
+      document.querySelector(".questions").style.display = "block";
+      showQuestion();
+      startTimer();
+    }
+
+    function startTimer() {
+      const timerDisplay = document.getElementById('timer');
+      let remainingTime = 3600;
+
+      timerInterval = setInterval(() => {
+        let minutes = Math.floor(remainingTime / 60);
+        let seconds = remainingTime % 60;
+        timerDisplay.textContent = `Time Remaining: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        if (remainingTime <= 0) {
+          clearInterval(timerInterval);
+          alert("Time's up! Submitting your test.");
+          submitTest();
+        }
+        remainingTime--;
+      }, 1000);
+    }
+
+    function showQuestion() {
+      const q = questionsData[currentQuestionIndex];
+      const container = document.getElementById("questionContainer");
+      container.innerHTML = `
+
+        <div class="question">
+          <label>${q.question}</label>
+          ${q.options.map(option => `
+
+            <div>
+              <input type="radio" name="q" value="${option}" ${userAnswers[currentQuestionIndex] === option ? 'checked' : ''}> ${option}
+            </div>
+          `).join('')}
+
+        </div>
+      `;
+
+      document.querySelector('.navigation button:nth-child(1)').style.display = currentQuestionIndex === 0 ? 'none' : 'inline-block';
+      document.getElementById('finishBtn').style.display = currentQuestionIndex === questionsData.length - 1 ? 'inline-block' : 'none';
+      document.querySelector('.navigation button:nth-child(2)').style.display = currentQuestionIndex === questionsData.length - 1 ? 'none' : 'inline-block';
+    }
+
+    function nextQuestion() {
+      saveAnswer();
+      if (currentQuestionIndex < questionsData.length - 1) {
+        currentQuestionIndex++;
+        showQuestion();
+      }
+    }
+
+    function prevQuestion() {
+      saveAnswer();
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuestion();
+      }
+    }
+
+    function saveAnswer() {
+      const selected = document.querySelector('input[name="q"]:checked');
+      if (selected) {
+        userAnswers[currentQuestionIndex] = selected.value;
+      }
+    }
+
+    function submitTest() {
+      clearInterval(timerInterval);
+      saveAnswer();
+      let correctCount = 0;
+      questionsData.forEach((q, i) => {
+        if (userAnswers[i] === q.correct) correctCount++;
+      });
+
+      const percentage = (correctCount / questionsData.length) * 100;
+      studentResults.push({
+        name: username,
+        score: percentage.toFixed(2) + "%",
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString()
+      });
+
+      localStorage.setItem('studentResults', JSON.stringify(studentResults));
+
+      displayCertificate(username, percentage);
+    }
+
+    function displayCertificate(name, percentage) {
+      document.querySelector(".questions").style.display = "none";
+      document.querySelector(".certificate").style.display = "block";
+      document.querySelector("#certificateName span").textContent = name;
+      document.getElementById("certificatePercentage").textContent = percentage.toFixed(2) + "%";
+    }
+
+    function showDetails() {
+      document.querySelector(".certificate").style.display = "none";
+      const detailsContainer = document.getElementById("detailsContainer");
+      detailsContainer.innerHTML = questionsData.map((q, i) => `
+        <div>
+          <strong>${q.question}</strong>
+          <p class="${userAnswers[i] === q.correct ? 'correct' : 'wrong'}">Your answer: ${userAnswers[i]}</p>
+          <p>Correct answer: ${q.correct}</p>
+        </div>
+      `).join('');
+      detailsContainer.style.display = "block";
+    }
+
+    function showTab(tab) {
+      document.getElementById('userTab').style.display = tab === 'user' ? 'block' : 'none';
+      document.getElementById('adminTab').style.display = tab === 'admin' ? 'block' : 'none';
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.tab-btn[onclick="showTab('${tab}')"]`).classList.add('active');
+    }
+
+    function authenticateAdmin() {
+  const password = document.getElementById('adminPassword').value.trim();
+  if (password === adminPassword) {
+    // Hide the login container inside adminTab
+    document.querySelector('#adminTab .container').style.display = 'none';
+
+    // Show the admin results container
+    document.getElementById('adminContainer').style.display = 'block';
+
+    // Populate the results
+    const adminResults = document.getElementById('adminResults');
+    adminResults.innerHTML = studentResults.map(result => `
+      <tr>
+        <td>${result.name}</td>
+        <td>${result.score}</td>
+        <td>${result.date}</td>
+        <td>${result.time}</td>
+        <td><button class="btn" onclick="deleteResult('${result.name}')">Delete</button></td>
+      </tr>
+    `).join('');
+  } else {
+    alert('Incorrect password');
+  }
+}
+
+
+    function deleteResult(name) {
+      studentResults = studentResults.filter(result => result.name !== name);
+      localStorage.setItem('studentResults', JSON.stringify(studentResults));
+      authenticateAdmin();
+    }
+  </script>
+</body>
+
+</html>
