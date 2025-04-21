@@ -456,32 +456,33 @@
       }
 
       function submitTest() {
-        clearInterval(timerInterval);
-        saveAnswer();
-        let correctCount = 0;
-        questionsData.forEach((q, i) => {
-          if (userAnswers[i] === q.correct) correctCount++;
-        });
+  clearInterval(timerInterval);
+  saveAnswer();
+  let correctCount = 0;
+  questionsData.forEach((q, i) => {
+    if (userAnswers[i] === q.correct) correctCount++;
+  });
 
-        const percentage = (correctCount / questionsData.length) * 100;
-        studentResults.push({
-          name: username,
-          score: percentage.toFixed(2) + "%",
-          date: new Date().toLocaleDateString(),
-          time: new Date().toLocaleTimeString()
-        });
+  const percentage = (correctCount / questionsData.length) * 100;
+  const finalScore = percentage.toFixed(2) + "%";
 
-        localStorage.setItem('studentResults', JSON.stringify(studentResults));
+  // Save to localStorage
+  studentResults.push({
+    name: username,
+    score: finalScore,
+    date: new Date().toLocaleDateString(),
+    time: new Date().toLocaleTimeString()
+  });
+  localStorage.setItem('studentResults', JSON.stringify(studentResults));
 
-        displayCertificate(username, percentage);
-      }
+  // Set form values and submit
+  document.getElementById("formName").value = username;
+  document.getElementById("formScore").value = finalScore;
+  document.getElementById("resultForm").submit();
 
-      function displayCertificate(name, percentage) {
-        document.querySelector(".questions").style.display = "none";
-        document.querySelector(".certificate").style.display = "block";
-        document.querySelector("#certificateName span").textContent = name;
-        document.getElementById("certificatePercentage").textContent = percentage.toFixed(2) + "%";
-      }
+  // Display certificate
+  displayCertificate(username, percentage);
+}
 
       function showDetails() {
         document.querySelector(".certificate").style.display = "none";
